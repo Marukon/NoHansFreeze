@@ -1,0 +1,1 @@
+ColorOS OplusHansManager 墓碑后台冻结白名单模块，通过 RemotePreferences 实时管控重要进程标记、cgroup 冻结与严格模式后台拦截，支持一键放行 Xposed 模块（基于 LibXposed API 102，无桌面图标）。
