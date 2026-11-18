@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">NoHansFreeze</string>
+    <string name="xposed_description">ColorOS OplusHansManager whitelist module to exempt selected apps from background freezing and socket destruction.</string>
+    <string name="status_checking">正在连接 LSPosed 服务...</string>
+    <string name="status_connected">LSPosed 服务已连接 (API %1$d)，已放行 %2$d 个应用（实时生效）</string>
+    <string name="status_disconnected">未连接到 LSPosed 服务，请在 LSPosed 中启用本模块并勾选“系统框架”后重启手机</string>
+    <string name="search_hint">搜索应用名称或包名...</string>
+    <string name="show_system_apps">显示系统</string>
+    <string name="only_xposed_apps">仅看 Xposed</string>
+    <string name="btn_allow_all_xposed">放行 Xposed (%1$d)</string>
+    <string name="btn_allow_recommended">放行推荐 (%1$d)</string>
+    <string name="xposed_badge">Xposed</string>
+    <string name="recommend_badge">推荐</string>
+    <string name="toast_xposed_whitelisted">已将 %1$d 个 Xposed 模块全部加入放行白名单</string>
+    <string name="toast_no_xposed_found">未检测到已安装的 Xposed 模块</string>
+    <string name="toast_recommended_whitelisted">已将 %1$d 个推荐应用加入放行白名单</string>
+    <string name="toast_no_recommended_found">未检测到可放行的推荐应用</string>
+    <string name="loading_apps">正在扫描已安装应用与 Xposed 模块...</string>
+</resources>

@@ -1,0 +1,62 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer Shield (Protection / Whitelist) -->
+    <path
+        android:pathData="M54,24 L76,32.5 C76,52 68.5,67.5 54,79 C39.5,67.5 32,52 32,32.5 Z"
+        android:strokeWidth="3.2"
+        android:strokeColor="#FFE1F5FE"
+        android:strokeLineJoin="round"
+        android:fillColor="#22FFFFFF" />
+
+    <!-- Stylized Snowflake (Freeze / Tombstone) inside shield -->
+    <path
+        android:pathData="M54,36 L54,66 M41,43.5 L67,58.5 M67,43.5 L41,58.5"
+        android:strokeWidth="2.8"
+        android:strokeColor="#FF81D4FA"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M50.5,39.5 L54,43 L57.5,39.5 M50.5,62.5 L54,59 L57.5,62.5 M42,48 L46.5,46.7 L45.3,42 M66,54 L61.5,55.3 L62.7,60 M62.7,42 L61.5,46.7 L66,48 M45.3,60 L46.5,55.3 L42,54"
+        android:strokeWidth="2.2"
+        android:strokeColor="#FFB3E5FC"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Center core dot -->
+    <path
+        android:pathData="M54,51m-3.6,0a3.6,3.6 0,1 1,7.2 0a3.6,3.6 0,1 1,-7.2 0"
+        android:fillColor="#FFFFFFFF" />
+
+    <!-- Diagonal Warm Amber/Cyan Unfreeze Slash & Spark (Breaking the Freeze) -->
+    <path
+        android:pathData="M35,69 L73,33"
+        android:strokeWidth="5.6"
+        android:strokeColor="#FF0D2B52"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M35,69 L73,33"
+        android:strokeWidth="3.4"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="35"
+                android:startY="69"
+                android:endX="73"
+                android:endY="33"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FFFFB300" />
+                <item android:offset="0.55" android:color="#FFFFD54F" />
+                <item android:offset="1.0" android:color="#FF00E5FF" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Small active spark dot at top-right tip -->
+    <path
+        android:pathData="M74.5,31.5m-2.4,0a2.4,2.4 0,1 1,4.8 0a2.4,2.4 0,1 1,-4.8 0"
+        android:fillColor="#FF00E5FF" />
+</vector>
