@@ -1,19 +1,46 @@
 # NoHansFreeze
 
-ColorOS `OplusHansManager` 墓碑白名单模块（基于 LibXposed API 102）。
+ColorOS `OplusHansManager` 墓碑后台冻结白名单模块（基于 LibXposed API 102）。
 
 - **仓库地址**: https://github.com/Marukon/NoHansFreeze
+- **LSPosed 发布仓库**: https://github.com/Xposed-Modules-Repo/io.github.marukon.nohansfreeze
 - **包名**: `io.github.marukon.nohansfreeze`
 - **默认作用域**: `system` / `android`（系统框架）
 
-## 功能特性
+---
 
-- 通过 Hook `OplusHansImportance.isImportantPkg`、`HansCGroup.hansFreezeLocked` 与 `OplusHansRestriction.isBlockedForStrictMode`，将勾选的应用彻底排除在 ColorOS 后台墓碑冻结及 `DestroyAllSocket` 断网之外。
-- 基于 `RemotePreferences` 同步配置，**首次启用模块重启一次手机后，后续增删白名单应用均实时生效**。
-- 自动识别已安装的 Xposed / LibXposed 模块并标注 `Xposed` 徽标，支持**一键放行所有 Xposed 模块**。
+## 本模块解决什么拦截？
+
+`NoHansFreeze` 仅针对 ColorOS 系统框架（`oplus-services.jar`）内的 **HANS 墓碑冻结引擎（`OplusHansManager`）** 进行 Hook 放行：
+
+1. **`OplusHansImportance.isImportantPkg`（3 个重载）**：对白名单包名直接返回 `true`，将其标记为受保护重要进程，阻止 HANS 状态机降级。
+2. **`HansCGroup.hansFreezeLocked`**：阻止对白名单进程执行 cgroup 冻结与伴随的 `DestroyAllSocket` / `k_socket` 断网。
+3. **`OplusHansRestriction.isBlockedForStrictMode`**：阻止严格省电模式下对白名单应用的后台限制拦截。
+
+模块通过 `RemotePreferences` 同步配置：**首次启用并在 LSPosed 勾选系统框架重启一次手机后，后续在应用内增删白名单均实时生效**，支持自动识别并一键放行已安装的 Xposed 模块及推荐应用。
+
+---
+
+## ColorOS 还有哪些拦截本模块处理不了？
+
+ColorOS 后台管控有多套相互独立的子系统。`NoHansFreeze` **只接管 HANS 墓碑冻结**，以下拦截属于其他子系统或模块，需要配合系统设置或其他方案单独处理：
+
+1. **自启动与关联启动拦截（`OplusAppStartupManager`）**：
+   - 例如后台 `bindService`（日志表现为 `prevent start ..., Type bs`）、广播拉起拦截等由 `OplusAppStartupManager` 控制，不在 HANS 冻结逻辑内。
+   - **处理方式**：在系统「设置 -> 应用 -> 自启动 / 关联启动」中为关键应用手动放行（如需要被其他应用静默拉起提供服务的组件）。
+2. **电池优化 / Doze 与系统耗电管控（`OGuard` / `DeviceIdle` / `power_consum_opt_status`）**：
+   - 包括 Android 原生 Doze 限制与 ColorOS 电池的“智能限制后台运行”策略。
+   - **处理方式**：在「设置 -> 电池 -> 耗电管理」中将需要保持联网/后台运行的应用设为**完全允许后台行为**（以及关闭电池优化）。
+3. **内存强杀与过程清理（`com.oplus.athena` / `osense` / 最近任务划卡清理）**：
+   - 物理内存紧张、温控降载或一键清理/上滑清除最近任务时触发的 LMK / Athena 强杀机制，并非 HANS 冻结，本模块无法阻止进程被直接杀死。
+4. **应用联网防火墙与 Xposed/Root 隐藏隔离（如 HMA 隐藏应用列表）**：
+   - 例如防火墙断网规则、或 HMA 阻止应用间通过 `PackageManager` / `ContentProvider` 互相发现与绑定，需要到对应模块或防火墙自身规则中放行。
+
+---
 
 ## 使用步骤
 
-1. 安装 APK 并在 LSPosed 中启用 `NoHansFreeze`，确保作用域已勾选 **系统框架 (`android`)**。
+1. 安装 APK 并在 LSPosed 中启用 `NoHansFreeze`，确保作用域已勾选 **系统框架 (`android`)**（模块默认不显示桌面图标，仅通过 LSPosed 模块界面打开）。
 2. **重启手机**，使 `system_server` 加载 Hook。
-3. 打开 `NoHansFreeze`，选择需要解除限制的应用或点击一键放行所有 Xposed 模块。
+3. 在 LSPosed 中打开 `NoHansFreeze`，选择需要解除 HANS 冻结的应用或点击一键放行所有 Xposed 模块。
+4. 若目标应用仍存在被系统禁止后台唤醒或断连问题，请配合上文检查 ColorOS「关联启动」与「耗电管理 -> 完全允许后台行为」。
