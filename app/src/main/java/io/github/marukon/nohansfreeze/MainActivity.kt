@@ -31,13 +31,11 @@ class MainActivity : AppCompatActivity() {
         val packageName: String,
         val icon: Drawable,
         val isSystem: Boolean,
-        val isXposedModule: Boolean,
-        val isRecommended: Boolean
+        val isXposedModule: Boolean
     )
 
     private lateinit var tvStatus: TextView
     private lateinit var btnAllowAllXposed: MaterialButton
-    private lateinit var btnAllowRecommended: MaterialButton
     private lateinit var etSearch: EditText
     private lateinit var swOnlyXposed: MaterialSwitch
     private lateinit var swSystemApps: MaterialSwitch
@@ -60,7 +58,6 @@ class MainActivity : AppCompatActivity() {
 
         tvStatus = findViewById(R.id.tvStatus)
         btnAllowAllXposed = findViewById(R.id.btnAllowAllXposed)
-        btnAllowRecommended = findViewById(R.id.btnAllowRecommended)
         etSearch = findViewById(R.id.etSearch)
         swOnlyXposed = findViewById(R.id.swOnlyXposed)
         swSystemApps = findViewById(R.id.swSystemApps)
@@ -75,8 +72,6 @@ class MainActivity : AppCompatActivity() {
         tvStatus.text = getString(R.string.status_disconnected)
         btnAllowAllXposed.text = getString(R.string.btn_allow_all_xposed, 0)
         btnAllowAllXposed.setOnClickListener { allowAllXposedModules() }
-        btnAllowRecommended.text = getString(R.string.btn_allow_recommended, 0)
-        btnAllowRecommended.setOnClickListener { allowRecommendedApps() }
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -157,18 +152,15 @@ class MainActivity : AppCompatActivity() {
                         packageName = info.packageName,
                         icon = pm.getApplicationIcon(info),
                         isSystem = isSys,
-                        isXposedModule = isXposed,
-                        isRecommended = RECOMMENDED_PACKAGES.contains(info.packageName)
+                        isXposedModule = isXposed
                     )
                 }
 
             val xposedCount = entries.count { it.isXposedModule }
-            val recommendedCount = entries.count { it.isRecommended }
             runOnUiThread {
                 allApps = entries
                 appsLoaded = true
                 btnAllowAllXposed.text = getString(R.string.btn_allow_all_xposed, xposedCount)
-                btnAllowRecommended.text = getString(R.string.btn_allow_recommended, recommendedCount)
                 layoutLoading.visibility = View.GONE
                 rvApps.alpha = 0f
                 rvApps.visibility = View.VISIBLE
@@ -200,28 +192,6 @@ class MainActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun allowRecommendedApps() {
-        val prefs = remotePrefs
-        if (prefs == null) {
-            Toast.makeText(this, R.string.status_disconnected, Toast.LENGTH_SHORT).show()
-            return
-        }
-        val recommendedPkgs = allApps.filter { it.isRecommended }.map { it.packageName }
-        if (recommendedPkgs.isEmpty()) {
-            Toast.makeText(this, R.string.toast_no_recommended_found, Toast.LENGTH_SHORT).show()
-            return
-        }
-        whitelistedPackages.addAll(recommendedPkgs)
-        prefs.edit().putStringSet(MainHook.KEY_WHITELIST_PKGS, whitelistedPackages.toSet()).apply()
-        updateStatusText()
-        applyFilter()
-        Toast.makeText(
-            this,
-            getString(R.string.toast_recommended_whitelisted, recommendedPkgs.size),
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
     private fun applyFilter() {
         if (!appsLoaded) return
         val query = etSearch.text?.toString()?.trim()?.lowercase().orEmpty()
@@ -239,7 +209,6 @@ class MainActivity : AppCompatActivity() {
             }
             .sortedWith(
                 compareByDescending<AppEntry> { whitelistedPackages.contains(it.packageName) }
-                    .thenByDescending { it.isRecommended }
                     .thenByDescending { it.isXposedModule }
                     .thenBy { it.label.lowercase() }
             )
@@ -271,7 +240,6 @@ class MainActivity : AppCompatActivity() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val ivIcon: ImageView = view.findViewById(R.id.ivIcon)
             val tvAppName: TextView = view.findViewById(R.id.tvAppName)
-            val tvRecommendBadge: TextView = view.findViewById(R.id.tvRecommendBadge)
             val tvXposedBadge: TextView = view.findViewById(R.id.tvXposedBadge)
             val tvPackageName: TextView = view.findViewById(R.id.tvPackageName)
             val swWhitelist: MaterialSwitch = view.findViewById(R.id.swWhitelist)
@@ -288,7 +256,6 @@ class MainActivity : AppCompatActivity() {
             val item = displayedApps[position]
             holder.ivIcon.setImageDrawable(item.icon)
             holder.tvAppName.text = item.label
-            holder.tvRecommendBadge.visibility = if (item.isRecommended) View.VISIBLE else View.GONE
             holder.tvXposedBadge.visibility = if (item.isXposedModule) View.VISIBLE else View.GONE
             holder.tvPackageName.text = item.packageName
 
@@ -302,20 +269,5 @@ class MainActivity : AppCompatActivity() {
                 holder.swWhitelist.toggle()
             }
         }
-    }
-
-    companion object {
-        private val RECOMMENDED_PACKAGES = setOf(
-            "com.azure.authenticator",
-            "com.microsoft.skydrive",
-            "com.microsoft.emmx",
-            "com.microsoft.office.outlook",
-            "com.microsoft.teams",
-            "com.google.android.apps.authenticator2",
-            "org.frknkrc44.hma_oss",
-            "com.tencent.mm",
-            "com.tencent.mobileqq",
-            "org.telegram.messenger.web"
-        )
     }
 }

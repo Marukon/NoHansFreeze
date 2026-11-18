@@ -8,12 +8,8 @@
     <string name="show_system_apps">显示系统</string>
     <string name="only_xposed_apps">仅看 Xposed</string>
     <string name="btn_allow_all_xposed">放行 Xposed (%1$d)</string>
-    <string name="btn_allow_recommended">放行推荐 (%1$d)</string>
     <string name="xposed_badge">Xposed</string>
-    <string name="recommend_badge">推荐</string>
     <string name="toast_xposed_whitelisted">已将 %1$d 个 Xposed 模块全部加入放行白名单</string>
     <string name="toast_no_xposed_found">未检测到已安装的 Xposed 模块</string>
-    <string name="toast_recommended_whitelisted">已将 %1$d 个推荐应用加入放行白名单</string>
-    <string name="toast_no_recommended_found">未检测到可放行的推荐应用</string>
     <string name="loading_apps">正在扫描已安装应用与 Xposed 模块...</string>
 </resources>

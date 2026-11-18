@@ -17,7 +17,7 @@ ColorOS `OplusHansManager` 墓碑后台冻结白名单模块（基于 LibXposed 
 2. **`HansCGroup.hansFreezeLocked`**：阻止对白名单进程执行 cgroup 冻结与伴随的 `DestroyAllSocket` / `k_socket` 断网。
 3. **`OplusHansRestriction.isBlockedForStrictMode`**：阻止严格省电模式下对白名单应用的后台限制拦截。
 
-模块通过 `RemotePreferences` 同步配置：**首次启用并在 LSPosed 勾选系统框架重启一次手机后，后续在应用内增删白名单均实时生效**，支持自动识别并一键放行已安装的 Xposed 模块及推荐应用。
+模块通过 `RemotePreferences` 同步配置：**首次启用并在 LSPosed 勾选系统框架重启一次手机后，后续在应用内增删白名单均实时生效**，支持自动识别并一键放行已安装的 Xposed 模块。
 
 ---
 

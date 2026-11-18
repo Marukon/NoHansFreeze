@@ -39,20 +39,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvRecommendBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/bg_recommend_badge"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="1dp"
-                android:text="@string/recommend_badge"
-                android:textColor="#00897B"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
                 android:id="@+id/tvXposedBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
